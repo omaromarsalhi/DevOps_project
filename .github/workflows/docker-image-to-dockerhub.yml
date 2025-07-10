@@ -2,8 +2,9 @@ name: Build & Push NestJS Docker Image
 
 on:
   push:
-    branches: [ main ]  # or your default branch
-  workflow_dispatch:    # allows manual trigger from GitHub UI
+    branches:
+      main
+  workflow_dispatch:    
 
 jobs:
   build-and-push:
