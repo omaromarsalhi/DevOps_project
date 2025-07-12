@@ -56,7 +56,6 @@ jobs:
             docker run -d \
               --name first-app \
               -p 3000:3000 \             # Map host port 3000 → container 3000
-              -e NODE_ENV=production \    # Example: Set env variables
               ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
   
             # Verify the container is running
