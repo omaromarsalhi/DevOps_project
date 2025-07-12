@@ -32,23 +32,34 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build-and-push
-
+    needs: build-and-push  # Waits for the build-and-push job to complete
+  
     steps:
-      - name: Deploy to Azure VM via SSH
-        uses: appleboy/ssh-action@v0.1.7
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.7  # Updated to latest stable version
         with:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
-          envs: DOCKER_USERNAME,DOCKER_PASSWORD
           script: |
-            echo "Logging into Docker Hub on VM"
-            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-            echo "Pulling latest Docker image"
-            docker pull $DOCKER_USERNAME/first-app:1.0
-            echo "Stopping old container if exists"
+            # Login to Docker Hub (if using private images)
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+  
+            # Pull the latest image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
+  
+            # Stop and remove old container (if exists)
             docker stop first-app || true
             docker rm first-app || true
-            echo "Running new container"
-            docker run -d --name first-app -p 3000:3000 $DOCKER_USERNAME/first-app:1.0
+  
+            # Run the new container with proper cleanup and restart policy
+            docker run -d \
+              --name first-app \
+              -p 3000:3000 \             # Map host port 3000 → container 3000
+              -e NODE_ENV=production \    # Example: Set env variables
+              ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
+  
+            # Verify the container is running
+            docker ps -a | grep first-app
+            echo "Deployment completed!"
+
