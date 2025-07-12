@@ -44,13 +44,15 @@ jobs:
           script: |
             # Login to Docker Hub (if using private images)
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-  
-            # Pull the latest image
-            docker pull ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
-  
+
             # Stop and remove old container (if exists)
             docker stop first-app || true
             docker rm first-app || true
+            
+            docker rmi -f omarsalhi1/first-app:1.0
+            
+            # Pull the latest image
+            docker pull ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
   
             # Run the new container with proper cleanup and restart policy
             docker run -d \
