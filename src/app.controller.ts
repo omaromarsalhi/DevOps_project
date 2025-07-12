@@ -17,7 +17,7 @@ export class AppController {
 
   @Get('greet/:name')
   getGreet(@Param('name') name: string) {
-    return { greeting: `Hello v2, ${name}!` };
+    return { greeting: `Hello v3, ${name}!` };
   }
 
   @Get('sum')
