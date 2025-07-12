@@ -36,7 +36,7 @@ jobs:
   
     steps:
       - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1.0.7  # Updated to latest stable version
+        uses: appleboy/ssh-action@v1.2.1
         with:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
