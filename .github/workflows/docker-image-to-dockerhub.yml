@@ -37,9 +37,9 @@ jobs:
     steps:
       - name: Transfer files
         run: |
-          scp -o StrictHostKeyChecking=no -i $SSH_KEY_PATH docker-compose-cd.yml "${{ secrets.VM_USER }}@${{ secrets.VM_IP }}:/home/${{ secrets.VM_USER }}/"
+          scp -o StrictHostKeyChecking=no -i $VM_SSH_KEY docker-compose-cd.yml "${{ secrets.VM_USER }}@${{ secrets.VM_IP }}:/home/${{ secrets.VM_USER }}/"
         env:
-          SSH_KEY_PATH: ${{ secrets.SSH_KEY_PATH }}
+          VM_SSH_KEY: ${{ secrets.VM_SSH_KEY }}
 
 
       - name: Deploy via SSH
