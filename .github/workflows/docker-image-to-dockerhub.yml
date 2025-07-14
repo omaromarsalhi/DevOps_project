@@ -44,7 +44,7 @@ jobs:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
-          source: docker-compose-cd.yml
+          source: ../../docker-compose-cd.yml
           target: ~/
 
       - name: Deploy via SSH
