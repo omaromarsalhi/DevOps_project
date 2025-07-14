@@ -44,8 +44,8 @@ jobs:
           script: |
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
         
-            docker stop SahraTalkBe || true
-            docker rm SahraTalkBe || true
+            docker stop SahraTalkBE || true
+            docker rm SahraTalkBE || true
             
             docker rmi -f omarsalhi1/sahratalk-be:1.0
      
@@ -66,8 +66,8 @@ jobs:
             EOF
 
             # Run the new container with proper cleanup and restart policy
-            docker run -d --name SahraTalkBe --env-file .env -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/sahratalk-be:1.0
+            docker run -d --name SahraTalkBE --env-file .env -p 3500:3000 ${{ secrets.DOCKER_USERNAME }}/sahratalk-be:1.0
   
             # Verify the container is running
-            docker ps -a | grep SahraTalkBe
+            docker ps -a | grep SahraTalkBE
             echo "Deployment completed!"
