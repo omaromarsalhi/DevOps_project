@@ -36,7 +36,7 @@ jobs:
 
     steps:
       - name: Copy docker-compose-cd.yml to server
-        uses: appleboy/scp-action@v1.6.14
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
@@ -44,6 +44,7 @@ jobs:
           source: 'docker-compose-cd.yml'
           target: '/home/${{ secrets.VM_USER }}/'
 
+          
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
         with:
