@@ -13,6 +13,9 @@ RUN npm install --production=false
 # Copy the rest of the application code
 COPY . .
 
+# Generate Prisma client
+RUN npx prisma generate
+
 # Build the NestJS app
 RUN npm run build
 
@@ -24,12 +27,10 @@ WORKDIR /app
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-
-# Copy docker-compose-cd.yml for deployment
-COPY --from=builder /app/docker-compose-cd.yml ./
+COPY --from=builder /app/prisma ./prisma
 
 # Expose the port (default 3000)
-EXPOSE 3000
+EXPOSE 3500
 
-# Start the app
-CMD ["node", "dist/main"]
+# Start the app with migration check
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]
