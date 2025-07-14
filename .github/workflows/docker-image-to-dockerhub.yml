@@ -35,8 +35,8 @@ jobs:
     # needs: build-and-push # Waits for the build-and-push job to complete
 
     steps:
-      - name: Debug - List files in repository
-        run: ls -R
+      - name: Set working directory
+        run: pwd && ls -la 
 
       - name: Copy docker-compose-cd.yml to VM
         uses: appleboy/scp-action@v0.1.0
@@ -44,7 +44,7 @@ jobs:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
-          source: ../../docker-compose-cd.yml
+          source: "docker-compose-cd.yml"
           target: ~/
 
       - name: Deploy via SSH
