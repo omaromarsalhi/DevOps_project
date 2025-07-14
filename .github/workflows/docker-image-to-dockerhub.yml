@@ -35,6 +35,15 @@ jobs:
     needs: build-and-push # Waits for the build-and-push job to complete
 
     steps:
+      - name: Copy docker-compose-cd.yml to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          source: 'docker-compose-cd.yml'
+          target: '/home/${{ secrets.VM_USER }}/'
+          
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
         with:
@@ -43,12 +52,12 @@ jobs:
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-        
+
             docker stop SahraTalkBE || true
             docker rm SahraTalkBE || true
-            
+
             docker rmi -f omarsalhi1/sahratalk-be:1.0
-  
+
             # Create .env file on the server
             cat > .env <<EOF
             NODE_ENV=production
@@ -66,5 +75,5 @@ jobs:
             docker compose -f docker-compose-cd.yml up -d --remove-orphans --build
 
             docker ps -a | grep SahraTalkBE
-            
+
             echo "Deployment completed!"
