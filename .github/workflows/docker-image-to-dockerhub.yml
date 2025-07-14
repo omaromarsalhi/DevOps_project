@@ -35,12 +35,14 @@ jobs:
     needs: build-and-push # Waits for the build-and-push job to complete
 
     steps:
-      - name: Transfer files
-        run: |
-          scp -o StrictHostKeyChecking=no -i $VM_SSH_KEY docker-compose-cd.yml "${{ secrets.VM_USER }}@${{ secrets.VM_IP }}:/home/${{ secrets.VM_USER }}/"
-        env:
-          VM_SSH_KEY: ${{ secrets.VM_SSH_KEY }}
-
+      - name: Copy docker-compose-cd.yml to VM
+        uses: appleboy/scp-action@v0.1.0
+        with:
+          host: ${{ secrets.VM_IP }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          source: docker-compose-cd.yml
+          target: ~/
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
@@ -76,4 +78,4 @@ jobs:
 
             echo "Deployment completed!"
 
-      
+
