@@ -42,8 +42,9 @@ jobs:
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-            # Login to Docker Hub (if using private images)
+          
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+<<<<<<< HEAD
 
             # Pull the latest image
             docker pull ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
@@ -59,6 +60,19 @@ jobs:
               -e NODE_ENV=production \    # Example: Set env variables
               ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
 
+=======
+        
+            docker stop first-app || true
+            docker rm first-app || true
+            
+            docker rmi -f omarsalhi1/first-app:1.0
+     
+            docker pull ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
+  
+            # Run the new container with proper cleanup and restart policy
+            docker run -d --name first-app -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/first-app:1.0
+  
+>>>>>>> 26a0ac5dfd7142342d53427be8e890163f8dd288
             # Verify the container is running
             docker ps -a | grep first-app
             echo "Deployment completed!"
