@@ -13,8 +13,11 @@ services:
 
   redis:
     image: redis:7
+    command: ["redis-server", "--requirepass", "myStrongRedisPassword"]
     ports:
       - 6379:6379
+    environment:
+      REDIS_PASSWORD: myStrongRedisPassword
     volumes:
       - redisdata:/data
 

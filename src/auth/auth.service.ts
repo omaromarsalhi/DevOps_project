@@ -1,17 +1,20 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import * as argon from 'argon2';
+
 import { PrismaService } from '../prisma/prisma.service';
 
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Tokens } from './types';
 import { TokenService } from './token.service';
 import { AuthResponseDto, SignInDto, SignUpDto } from './dto';
+import { RedisService } from 'src/redis.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private tokenService: TokenService,
+    private redisService: RedisService,
   ) {}
 
   async signupLocal(dto: SignUpDto): Promise<Tokens> {
@@ -78,17 +81,7 @@ export class AuthService {
   // });
 
   async logout(userId: string): Promise<boolean> {
-    await this.prisma.user.updateMany({
-      where: {
-        id: userId,
-        hashedRt: {
-          not: null,
-        },
-      },
-      data: {
-        hashedRt: null,
-      },
-    });
+    await this.redisService.del(`user:${userId}:rt:`);
     return true;
   }
 }
