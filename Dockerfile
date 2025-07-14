@@ -25,6 +25,9 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
+# Copy docker-compose-cd.yml for deployment
+COPY --from=builder /app/docker-compose-cd.yml ./
+
 # Expose the port (default 3000)
 EXPOSE 3000
 
