@@ -1,7 +1,8 @@
 version: '3.8'
 services:
   backend:
-    image: ${{ secrets.DOCKER_USERNAME }}/sahratalk-be:1.0
+    image: omarsalhi1/sahratalk-be:1.0
+    container_name: SahraTalkBE
     env_file:
       - .env
     ports:
@@ -9,14 +10,16 @@ services:
     depends_on:
       - db
       - redis
+    restart: unless-stopped
 
   db:
     image: postgres:15
+    container_name: SahraTalkDB
     restart: always
     environment:
       POSTGRES_DB: sahratalk_db
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5500:5432"
     volumes:
@@ -24,8 +27,9 @@ services:
 
   redis:
     image: redis:7
+    container_name: SahraTalkRedis
     restart: always
-    command: ["redis-server", "--requirepass", "${{ secrets.REDIS_PASSWORD }}"]
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
       - "6379:6379"
     volumes:
