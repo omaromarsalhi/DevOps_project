@@ -1,34 +1,32 @@
-# Stage 1: Build the app
-FROM node:18-alpine AS builder
+# Use official Node.js LTS image
+FROM node:20-alpine as builder
 
-WORKDIR /DevOps_project
+# Set working directory
+WORKDIR /app
 
-# Copy package files and install dependencies
-COPY package.json package-lock.json* ./
-RUN npm install
+# Copy package files
+COPY package*.json ./
 
-# Copy all source files
+# Install dependencies
+RUN npm install --production=false
+
+# Copy the rest of the application code
 COPY . .
 
-# Build the NestJS app (compile TS to JS)
+# Build the NestJS app
 RUN npm run build
 
-# Stage 2: Production image
-FROM node:18-alpine
+# Production image
+FROM node:20-alpine as production
+WORKDIR /app
 
-WORKDIR /DevOps_project
+# Copy only necessary files from builder
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
 
-# Copy only package files for production deps
-COPY package.json package-lock.json* ./
-
-# Install only production dependencies
-RUN npm install --only=production
-
-# Copy the compiled output from the builder stage
-COPY --from=builder /DevOps_project/dist ./dist
-
-# Expose port (adjust if your app uses a different port)
+# Expose the port (default 3000)
 EXPOSE 3000
 
-# Start the app using the compiled files
-CMD ["node", "dist/main.js"]
+# Start the app
+CMD ["node", "dist/main"]

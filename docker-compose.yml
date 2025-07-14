@@ -1,10 +1,24 @@
 version: '3.8'
-
 services:
-  my_app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: first_devops_proj
+  sahratalk_db:
+    image: postgres:15
     ports:
-      - "3000:3000"
+      - 5500:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: sahratalk_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    ports:
+      - 6379:6379
+    volumes:
+      - redisdata:/data
+
+volumes:
+  pgdata:
+
+  redisdata:
