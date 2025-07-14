@@ -35,16 +35,13 @@ jobs:
     needs: build-and-push # Waits for the build-and-push job to complete
 
     steps:
-      - name: Copy docker-compose-cd.yml to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VM_IP }}
-          username: ${{ secrets.VM_USER }}
-          key: ${{ secrets.VM_SSH_KEY }}
-          source: 'docker-compose-cd.yml'
-          target: '/home/${{ secrets.VM_USER }}/'
+      - name: Transfer files
+        run: |
+          scp -o StrictHostKeyChecking=no -i $SSH_KEY_PATH docker-compose-cd.yml .env "${{ secrets.VM_USER }}@${{ secrets.VM_IP }}:/home/${{ secrets.VM_USER }}/"
+        env:
+          SSH_KEY_PATH: ${{ secrets.SSH_KEY_PATH }}
 
-          
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
         with:
@@ -78,3 +75,5 @@ jobs:
             docker ps -a | grep SahraTalkBE
 
             echo "Deployment completed!"
+
+      
