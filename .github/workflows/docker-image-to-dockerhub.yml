@@ -74,7 +74,7 @@ jobs:
             fi
 
             # Create .env file on the server
-            cat > .env <<EOF
+            cat > .env << 'EOF'
             NODE_ENV=production
             DATABASE_URL=${{ secrets.DATABASE_URL }}
             SERVER_PORT=${{ secrets.SERVER_PORT }}
@@ -86,7 +86,7 @@ jobs:
             JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }}
             JWT_ACCESS_TOKEN_TTL=${{ secrets.JWT_ACCESS_TOKEN_TTL }}
             JWT_REFRESH_TOKEN_TTL=${{ secrets.JWT_REFRESH_TOKEN_TTL }}
-            EOF  
+            EOF
 
             docker compose -f docker-compose-cd.yml up -d --remove-orphans --build
 
