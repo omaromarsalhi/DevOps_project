@@ -11,9 +11,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-sahratalk_db}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGPASSWORD: ${POSTGRES_PASSWORD}  #
+      PGPASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "${POSTGRES_HOST_PORT:-5500}:5432"
+      - "127.0.0.1:${POSTGRES_HOST_PORT:-5500}:5432"  # Only localhost access
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -30,23 +30,24 @@ services:
       - .env
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
-      - "${REDIS_HOST_PORT:-6379}:${REDIS_PORT:-6379}"
+      - "127.0.0.1:${REDIS_HOST_PORT:-6379}:${REDIS_PORT:-6379}"  # Only localhost access
     volumes:
       - redisdata:/data
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 10s
       timeout: 3s
-      retries: 3
+      retries: 5
 
   # Backend service with proper dependency waiting
   backend:
-    image: omarsalhi1/sahratalk-be:1.0
+    image: ${DOCKER_IMAGE:-omarsalhi1/sahratalk-be:1.0}
     container_name: SahraTalkBE
     env_file:
       - .env
-    ports:
-      - "${SERVER_PORT:-3500}:${SERVER_PORT:-3500}"
+    # Remove external port exposure - only accessible within Docker network
+    expose:
+      - ${SERVER_PORT}  # Internal Docker network only
     depends_on:
       db:
         condition: service_healthy
