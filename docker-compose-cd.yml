@@ -1,17 +1,6 @@
 version: '3.8'
 services:
-  backend:
-    image: omarsalhi1/sahratalk-be:1.0
-    container_name: SahraTalkBE
-    env_file:
-      - .env
-    ports:
-      - "3500:3000"
-    depends_on:
-      - db
-      - redis
-    restart: unless-stopped
-
+  # Database services only
   db:
     image: postgres:15
     container_name: SahraTalkDB
@@ -20,10 +9,16 @@ services:
       POSTGRES_DB: sahratalk_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGPASSWORD: ${POSTGRES_PASSWORD}  # For health check authentication
     ports:
-      - "5500:5432"
+      - 5500:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sahratalk_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
 
   redis:
     image: redis:7
@@ -31,9 +26,29 @@ services:
     restart: always
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
-      - "6379:6379"
+      - 6379:6379
     volumes:
       - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # Backend service with proper dependency waiting
+  backend:
+    image: omarsalhi1/sahratalk-be:1.0
+    container_name: SahraTalkBE
+    env_file:
+      - .env
+    ports:
+      - 3500:3000
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
 
 volumes:
   pgdata:
