@@ -66,19 +66,29 @@ export class AuthService {
     await this.tokenService.updateRtHash(user.id, tokens.refresh_token);
 
     return {
-      _id: user.id,
+      id: user.id,
       username: user.username,
       email: user.email,
       tokens,
     };
   }
 
-  // res.status(200).json({
-  //   _id: user._id,
-  //   fullName: user.fullName,
-  //   email: user.email,
-  //   profilePic: user.profilePic,
-  // });
+  async getUserById(userId: string): Promise<Omit<AuthResponseDto, 'tokens'>> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+      },
+    });
+
+    if (!user) throw new ForbiddenException('User not found');
+
+    return user;
+  }
 
   async logout(userId: string): Promise<boolean> {
     await this.redisService.del(`user:${userId}:rt:`);

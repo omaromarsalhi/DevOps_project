@@ -20,19 +20,16 @@ export class TokenService {
   async refreshTokens(userId: string, rt: string): Promise<Tokens> {
     // Get hashedRt from Redis
     const hashedRt = await this.redisService.get(`user:${userId}:rt:`);
+
     if (!hashedRt) throw new ForbiddenException('Access Denied 1');
 
-    // const rtMatches = await argon.verify(hashedRt, rt);
-    // if (!rtMatches) throw new ForbiddenException('Access Denied 2');
+    const rtMatches = await argon.verify(hashedRt, rt);
+    if (!rtMatches) throw new ForbiddenException('Access Denied 2');
 
-    // You may want to get user email from DB, or cache it elsewhere
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new ForbiddenException('Access Denied 3');
 
-    const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRtHash(user.id, tokens.refresh_token);
-
-    return tokens;
+    return await this.getTokens(user.id, user.email);
   }
 
   async updateRtHash(userId: string, rt: string): Promise<void> {
@@ -49,11 +46,11 @@ export class TokenService {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: this.config.get<string>('JWT_ACCESS_SECRET_KEY'),
-        expiresIn: this.config.get<string>('JWT_ACCESS_EXPIRATION_TIME', '5m'),
+        expiresIn: this.config.get<string>('JWT_ACCESS_TOKEN_TTL'),
       }),
       this.jwtService.signAsync(jwtPayload, {
         secret: this.config.get<string>('JWT_REFRESH_SECRET_KEY'),
-        expiresIn: this.config.get<string>('JWT_REFRESH_EXPIRATION_TIME', '1d'),
+        expiresIn: this.config.get<string>('JWT_REFRESH_TOKEN_TTL'),
       }),
     ]);
 

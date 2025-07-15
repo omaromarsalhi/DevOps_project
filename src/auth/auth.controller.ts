@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -10,7 +11,7 @@ import {
 import { Response } from 'express';
 
 import { Public, GetCurrentUserId, GetCurrentUser } from '../common/decorators';
-import { RtGuard } from '../common/guards';
+import { AtGuard, RtGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { Tokens } from './types';
 import { TokenService } from './token.service';
@@ -22,6 +23,16 @@ export class AuthController {
     private authService: AuthService,
     private tokenService: TokenService,
   ) {}
+
+  @UseGuards(AtGuard)
+  @Get('check')
+  @HttpCode(HttpStatus.OK)
+  async check(
+    @GetCurrentUserId() userId: string,
+  ): Promise<Omit<AuthResponseDto, 'tokens'>> {
+    const userInfo = await this.authService.getUserById(userId);
+    return userInfo;
+  }
 
   @Public()
   @Post('signup')
@@ -56,7 +67,6 @@ export class AuthController {
       maxAge: 24 * 60 * 60 * 1000,
       path: '/api/v1/auth/refresh',
     });
-    // Return user info and access_token only
     const { tokens, ...userInfo } = result;
     return { ...userInfo, access_token: tokens.access_token };
   }

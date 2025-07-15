@@ -86,6 +86,7 @@ jobs:
             JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }}
             JWT_ACCESS_TOKEN_TTL=${{ secrets.JWT_ACCESS_TOKEN_TTL }}
             JWT_REFRESH_TOKEN_TTL=${{ secrets.JWT_REFRESH_TOKEN_TTL }}
+            CORS_ORIGIN=${{ secrets.CORS_ORIGIN }}
             EOF
 
             docker compose -f docker-compose-cd.yml up -d --remove-orphans --build
