@@ -45,12 +45,12 @@ export class TokenService {
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.config.get<string>('JWT_ACCESS_SECRET_KEY'),
-        expiresIn: this.config.get<string>('JWT_ACCESS_TOKEN_TTL'),
+        secret: process.env.JWT_ACCESS_SECRET_KEY || 'key',
+        expiresIn: process.env.JWT_ACCESS_TOKEN_TTL || '20s',
       }),
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.config.get<string>('JWT_REFRESH_SECRET_KEY'),
-        expiresIn: this.config.get<string>('JWT_REFRESH_TOKEN_TTL'),
+        secret: process.env.JWT_REFRESH_SECRET_KEY || 'refresh_key',
+        expiresIn: process.env.JWT_REFRESH_TOKEN_TTL || '1d',
       }),
     ]);
 

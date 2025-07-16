@@ -92,6 +92,8 @@ export class AuthService {
 
   async logout(userId: string): Promise<boolean> {
     await this.redisService.del(`user:${userId}:rt:`);
+    const token = await this.redisService.get(`user:${userId}:rt:`);
+    console.log(`user:${userId}:rt:`, token);
     return true;
   }
 }

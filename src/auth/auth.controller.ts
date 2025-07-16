@@ -24,6 +24,7 @@ export class AuthController {
     private tokenService: TokenService,
   ) {}
 
+
   @UseGuards(AtGuard)
   @Get('check')
   @HttpCode(HttpStatus.OK)
@@ -71,10 +72,11 @@ export class AuthController {
     return { ...userInfo, access_token: tokens.access_token };
   }
 
+  @UseGuards(AtGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@GetCurrentUserId() userId: string): Promise<boolean> {
-    return this.authService.logout(userId);
+  async logout(@GetCurrentUserId() userId: string): Promise<boolean> {
+    return await this.authService.logout(userId);
   }
 
   @Public()
