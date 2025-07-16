@@ -86,7 +86,7 @@ jobs:
             JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }}
             JWT_ACCESS_TOKEN_TTL=${{ vars.JWT_ACCESS_TOKEN_TTL }}
             JWT_REFRESH_TOKEN_TTL=${{ vars.JWT_REFRESH_TOKEN_TTL }}
-            JWT_REFRESH_TOKEN_TTL=${{ vars.JWT_REFRESH_TOKEN_TTL }}
+            JWT_REFRESH_TOKEN_COOKIE_TTL=${{ vars.JWT_REFRESH_TOKEN_COOKIE_TTL }}
             CORS_ORIGIN=${{ vars.CORS_ORIGIN }}
             EOF
 
