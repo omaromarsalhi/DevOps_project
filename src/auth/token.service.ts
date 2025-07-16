@@ -42,11 +42,16 @@ export class TokenService {
       sub: userId,
       email: email,
     };
+    console.log('access ttl', this.config.get('JWT_ACCESS_TOKEN_TTL'));
+    console.log('refresh ttl', this.config.get('JWT_REFRESH_TOKEN_TTL'));
+
+    console.log('access ttl 2', process.env.JWT_ACCESS_TOKEN_TTL);
+    console.log('refresh ttl 2', process.env.JWT_REFRESH_TOKEN_TTL);
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.JWT_ACCESS_SECRET_KEY || 'key',
-        expiresIn: process.env.JWT_ACCESS_TOKEN_TTL || '20s',
+        expiresIn: process.env.JWT_ACCESS_TOKEN_TTL || '5m',
       }),
       this.jwtService.signAsync(jwtPayload, {
         secret: process.env.JWT_REFRESH_SECRET_KEY || 'refresh_key',
