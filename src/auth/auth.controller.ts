@@ -16,6 +16,7 @@ import { AuthService } from './auth.service';
 import { Tokens } from './types';
 import { TokenService } from './token.service';
 import { AuthResponseDto, SignInDto, SignUpDto } from './dto';
+import { setRefreshTokenCookie } from 'src/utils/cookieSetter';
 
 @Controller('api/v1/auth')
 export class AuthController {
@@ -23,7 +24,6 @@ export class AuthController {
     private authService: AuthService,
     private tokenService: TokenService,
   ) {}
-
 
   @UseGuards(AtGuard)
   @Get('check')
@@ -43,13 +43,12 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<Omit<Tokens, 'refresh_token'>> {
     const tokens = await this.authService.signupLocal(dto);
-    res.cookie('refreshToken', tokens.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 24 * 60 * 60 * 1000,
-      path: '/api/v1/auth/refresh',
-    });
+    setRefreshTokenCookie(
+      res,
+      tokens.refresh_token,
+      parseInt(process.env.JWT_REFRESH_TOKEN_COOKIE_TTL!, 10) ||
+        24 * 60 * 60 * 1000,
+    );
     return { access_token: tokens.access_token };
   }
 
@@ -61,13 +60,12 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<Omit<AuthResponseDto, 'tokens'> & { access_token: string }> {
     const result = await this.authService.signinLocal(dto);
-    res.cookie('refreshToken', result.tokens.refresh_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 24 * 60 * 60 * 1000,
-      path: '/api/v1/auth/refresh',
-    });
+    setRefreshTokenCookie(
+      res,
+      result.tokens.refresh_token,
+      parseInt(process.env.JWT_REFRESH_TOKEN_COOKIE_TTL!, 10) ||
+        24 * 60 * 60 * 1000,
+    );
     const { tokens, ...userInfo } = result;
     return { ...userInfo, access_token: tokens.access_token };
   }
