@@ -49,28 +49,12 @@ jobs:
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.2.1
-        env:
-          NODE_ENV: production
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          SERVER_PORT: ${{ secrets.SERVER_PORT }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
-          REDIS_PASSWORD: ${{ secrets.REDIS_PASSWORD }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          JWT_ACCESS_SECRET_KEY: ${{ secrets.JWT_ACCESS_SECRET_KEY }}
-          JWT_REFRESH_SECRET_KEY: ${{ secrets.JWT_REFRESH_SECRET_KEY }}
-          JWT_ACCESS_TOKEN_TTL: ${{ secrets.JWT_ACCESS_TOKEN_TTL }}
-          JWT_REFRESH_TOKEN_TTL: ${{ secrets.JWT_REFRESH_TOKEN_TTL }}
-          JWT_REFRESH_TOKEN_COOKIE_TTL: ${{ secrets.JWT_REFRESH_TOKEN_COOKIE_TTL }}
-          CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         with:
           host: ${{ secrets.VM_IP }}
           username: ${{ secrets.VM_USER }}
           key: ${{ secrets.VM_SSH_KEY }}
           script: |
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             # Stop and remove container if it exists
             if [ "$(docker ps -aq -f name=SahraTalkBE)" ]; then
@@ -89,22 +73,21 @@ jobs:
                 echo "No existing image omarsalhi1/sahratalk-be:1.0 found."
             fi
 
-            # Create .env file on the server using the environment variables
-            # This is the safest method to handle special characters in secrets
-            cat > .env <<EOF
-            NODE_ENV=$NODE_ENV
-            DATABASE_URL=$DATABASE_URL
-            SERVER_PORT=$SERVER_PORT
-            REDIS_HOST=$REDIS_HOST
-            REDIS_PORT=$REDIS_PORT
-            REDIS_PASSWORD=$REDIS_PASSWORD
-            POSTGRES_PASSWORD=$POSTGRES_PASSWORD
-            JWT_ACCESS_SECRET_KEY=$JWT_ACCESS_SECRET_KEY
-            JWT_REFRESH_SECRET_KEY=$JWT_REFRESH_SECRET_KEY
-            JWT_ACCESS_TOKEN_TTL=$JWT_ACCESS_TOKEN_TTL
-            JWT_REFRESH_TOKEN_TTL=$JWT_REFRESH_TOKEN_TTL
-            JWT_REFRESH_TOKEN_COOKIE_TTL=$JWT_REFRESH_TOKEN_COOKIE_TTL
-            CORS_ORIGIN=$CORS_ORIGIN
+            # Create .env file on the server
+            cat > .env << 'EOF'   
+            NODE_ENV=production
+            DATABASE_URL=${{ vars.DATABASE_URL }}
+            SERVER_PORT=${{ vars.SERVER_PORT }}
+            REDIS_HOST=${{ vars.REDIS_HOST }}
+            REDIS_PORT=${{ vars.REDIS_PORT }}
+            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            JWT_ACCESS_SECRET_KEY=${{ secrets.JWT_ACCESS_SECRET_KEY }}
+            JWT_REFRESH_SECRET_KEY=${{ secrets.JWT_REFRESH_SECRET_KEY }}
+            JWT_ACCESS_TOKEN_TTL=${{ vars.JWT_ACCESS_TOKEN_TTL }}
+            JWT_REFRESH_TOKEN_TTL=${{ vars.JWT_REFRESH_TOKEN_TTL }}
+            JWT_REFRESH_TOKEN_TTL=${{ vars.JWT_REFRESH_TOKEN_TTL }}
+            CORS_ORIGIN=${{ vars.CORS_ORIGIN }}
             EOF
 
             docker compose -f docker-compose-cd.yml up -d --remove-orphans --build
