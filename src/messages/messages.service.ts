@@ -17,22 +17,6 @@ export class MessagesService {
         orderBy: {
           createdAt: 'asc',
         },
-        include: {
-          sender: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
-            },
-          },
-          receiver: {
-            select: {
-              id: true,
-              username: true,
-              email: true,
-            },
-          },
-        },
       });
 
       return messages;

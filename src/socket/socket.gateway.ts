@@ -24,14 +24,13 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userId = socket.handshake.query.userId as string;
     if (userId) this.userSocketMap[userId] = socket.id;
     this.server.emit('getOnlineUsers', Object.keys(this.userSocketMap));
-    console.log('A user connected', socket.id);
   }
 
   handleDisconnect(socket: Socket) {
     const userId = socket.handshake.query.userId as string;
     if (userId) delete this.userSocketMap[userId];
     this.server.emit('getOnlineUsers', Object.keys(this.userSocketMap));
-    console.log('A user disconnected', socket.id);
+
   }
 
   @SubscribeMessage('getReceiverSocketId')

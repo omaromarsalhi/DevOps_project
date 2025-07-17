@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { MessagesModule } from './messages/messages.module';
 import { SocketModule } from './socket/socket.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { SocketModule } from './socket/socket.module';
     UserModule,
     MessagesModule,
     SocketModule,
+    UploadModule,
   ],
   providers: [
     {
