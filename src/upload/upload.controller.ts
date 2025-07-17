@@ -36,4 +36,16 @@ export class UploadController {
     );
     return { imageUrl: url };
   }
+
+  @Post('image')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImage(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    const url = await this.uploadService.uploadFileToAzure(file);
+    return { imageUrl: url };
+  }
 }

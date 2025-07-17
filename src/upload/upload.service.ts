@@ -32,4 +32,15 @@ export class UploadService {
 
     return blockBlobClient.url;
   }
+
+  async uploadFileToAzure(file: Express.Multer.File): Promise<string> {
+    const blobName = `${uuidv4()}-${file.originalname}`;
+    const blockBlobClient = this.containerClient.getBlockBlobClient(blobName);
+
+    await blockBlobClient.uploadData(file.buffer, {
+      blobHTTPHeaders: { blobContentType: file.mimetype },
+    });
+
+    return blockBlobClient.url;
+  }
 }
