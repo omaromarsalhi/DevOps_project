@@ -69,6 +69,8 @@ export class AuthService {
       id: user.id,
       username: user.username,
       email: user.email,
+      image: user.image ? user.image : undefined,
+      createdAt: user.createdAt,
       tokens,
     };
   }
@@ -82,12 +84,17 @@ export class AuthService {
         id: true,
         username: true,
         email: true,
+        image: true,
+        createdAt: true,
       },
     });
 
     if (!user) throw new ForbiddenException('User not found');
 
-    return user;
+    return {
+      ...user,
+      image: user.image ?? undefined,
+    };
   }
 
   async logout(userId: string): Promise<boolean> {

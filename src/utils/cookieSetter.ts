@@ -5,10 +5,11 @@ export function setRefreshTokenCookie(
   refreshToken: string,
   maxAge: number = 24 * 60 * 60 * 1000,
 ): void {
+  console.log('maxAge', maxAge);
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: 'lax',
     maxAge: maxAge,
     path: '/api/v1/auth/refresh',
   });

@@ -18,4 +18,29 @@ model User {
   email     String   @unique
   hash      String
   username String
+  image      String?
+
+  // Relations
+  sentMessages     Message[] @relation("SenderMessages")
+  receivedMessages Message[] @relation("ReceiverMessages")
+
+  @@index([id])
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  senderId   String
+  receiverId String
+  text       String?
+  image      String?
+
+  // Relations
+  sender   User @relation("SenderMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceiverMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@index([senderId])
+  @@index([receiverId])
+  @@index([createdAt])
 }
