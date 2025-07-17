@@ -13,7 +13,7 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGPASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "127.0.0.1:${POSTGRES_HOST_PORT:-5500}:5432"  # Only localhost access
+      - "${POSTGRES_HOST_PORT:-5500}:5432"  # Only localhost access
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -32,7 +32,7 @@ services:
       - .env
     command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
-      - "127.0.0.1:${REDIS_HOST_PORT:-6379}:${REDIS_PORT:-6379}"  # Only localhost access
+      - "${REDIS_HOST_PORT:-6379}:${REDIS_PORT:-6379}"  # Only localhost access
     volumes:
       - redisdata:/data
     healthcheck:
@@ -51,7 +51,7 @@ services:
       - .env
     # Remove external port exposure - only accessible within Docker network
     ports:
-      - "127.0.0.1:${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"  
+      - "${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"  
     depends_on:
       db:
         condition: service_healthy
