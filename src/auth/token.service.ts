@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as argon from 'argon2';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { RedisService } from '../redis.service';
+import { RedisService } from '../utils/redis.service';
 
 import { JwtPayload, Tokens } from './types';
 

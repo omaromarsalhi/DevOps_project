@@ -7,7 +7,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Tokens } from './types';
 import { TokenService } from './token.service';
 import { AuthResponseDto, SignInDto, SignUpDto } from './dto';
-import { RedisService } from 'src/redis.service';
+import { RedisService } from 'src/utils/redis.service';
 
 @Injectable()
 export class AuthService {

@@ -5,7 +5,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AtStrategy, RtStrategy } from './strategies';
 import { TokenService } from './token.service';
-import { RedisService } from '../redis.service';
+import { RedisService } from '../utils/redis.service';
 
 @Module({
   imports: [JwtModule.register({})],
