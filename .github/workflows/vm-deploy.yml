@@ -65,6 +65,7 @@ jobs:
             JWT_REFRESH_TOKEN_TTL=${{ vars.JWT_REFRESH_TOKEN_TTL }}
             JWT_REFRESH_TOKEN_COOKIE_TTL=${{ vars.JWT_REFRESH_TOKEN_COOKIE_TTL }}
             CORS_ORIGIN=${{ vars.CORS_ORIGIN }}
+            AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
             EOF
 
             docker compose -f docker-compose-cd.yml up -d --remove-orphans --build
