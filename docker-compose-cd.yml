@@ -21,6 +21,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - sahra_net
 
   redis:
     image: redis:7
@@ -38,6 +40,8 @@ services:
       interval: 10s
       timeout: 3s
       retries: 5
+    networks:
+      - sahra_net
 
   # Backend service with proper dependency waiting
   backend:
@@ -54,7 +58,13 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
+    networks:
+      - sahra_net
 
 volumes:
   pgdata:
   redisdata:
+
+networks:
+  sahra_net:
+    driver: bridge

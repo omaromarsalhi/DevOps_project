@@ -32,6 +32,7 @@ COPY --from=builder /app/prisma ./prisma
 # Expose the port (default 3000)
 EXPOSE 3500
 
-# Start the app with migration check and run node as PID 1 for proper signal handling
-ENTRYPOINT ["npx", "prisma", "migrate", "deploy"]
-CMD ["node", "dist/main"]
+# Start the app with migration check
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]
+
+
