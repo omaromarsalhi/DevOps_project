@@ -50,7 +50,7 @@ services:
     env_file:
       - .env
     # Remove external port exposure - only accessible within Docker network
-    # ports:
+    ports:
       - "${SERVER_PORT:-3000}:${SERVER_PORT:-3000}"  
     depends_on:
       db:
