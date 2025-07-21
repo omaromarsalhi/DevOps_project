@@ -75,13 +75,13 @@ This backend system, powered by **NestJS**, is the core engine of a **real-time 
 ## 🖼️ Architecture & Sequence Diagrams
 
 ### 🔄 Login Sequence
-![Login Sequence](./docs/images/login-sequence.png)
+![Login Sequence](./docs/images/login.png)
 
 ### 📝 Registration Sequence
-![Register Sequence](./docs/images/register-sequence.png)
+![Register Sequence](./docs/images/register.png)
 
 ### ☁️ System Cloud Architecture
-![Cloud Architecture](./docs/images/cloud-architecture.png)
+![Cloud Architecture](./docs/images/system.png)
 
 ---
 
