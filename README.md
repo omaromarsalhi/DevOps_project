@@ -1,5 +1,7 @@
 # 📡 Real-Time Chat Backend (NestJS)
 
+![CI](https://github.com/your-username/your-repo-name/actions/workflows/ci.yml/badge.svg)
+
 This backend system, powered by **NestJS**, is the core engine of a **real-time chat application**. It supports **secure authentication**, **live communication**, and **file handling**, all while being designed for **scalability**, **performance**, and **security** in production environments.
 
 ---
@@ -16,53 +18,41 @@ This backend system, powered by **NestJS**, is the core engine of a **real-time 
   - Login (with credential verification)
   - Token refresh
   - Secure logout (token invalidation)
+  - Upload images
+  - Send and Request messages
+  - Get users
 
 ### 🗣️ Real-Time Communication
 - WebSocket via **Socket.IO**
 - Room-based architecture for chat isolation
 - Events handled:
   - Send/receive messages
-  - Typing indicators
   - User online/offline presence
-  - Join/leave chat rooms
 - Message persistence in **PostgreSQL**
-- **Redis** caching for recent messages
 
 ### 📁 File Handling Service
 - Azure Blob Storage with SAS token generation (time-limited)
-- File validation: type & size checks
 - Metadata stored in PostgreSQL:
-  - Original filename
   - Storage path
-  - File size & MIME type
-  - Owner details
-- CDN-ready file URLs for client access
 
 ### 🧠 Data Management
 - **PostgreSQL**:
   - User accounts and profiles
   - Chat messages
   - File metadata
-  - Room information
 - **Redis**:
   - Refresh token storage
-  - WebSocket session handling
-  - Message pub/sub system
-  - Rate limiting and caching
 
 ---
 
 ## ⚙️ Operational Capabilities
 - Docker containerized deployment
 - Horizontal scalability potential
-- Health check endpoints for service monitoring
 - Structured logging and error handling
-- Automated test suite for CI pipelines
 
 ---
 
 ## 🛡️ Security Highlights
-- API rate limiting
 - CSRF protection
 - Input validation and sanitization
 - Strong password hashing
@@ -106,6 +96,20 @@ The system is optimized to support **hundreds of concurrent users** with **sub-s
 
 ---
 
+## 🛠️ Continuous Integration & Deployment (CI/CD)
+
+This project uses **GitHub Actions** to automate testing, linting, and building on every push and pull request. CI/CD ensures changes are automatically validated and production-ready.
+
+### 📦 Workflow Highlights
+- ✅ ESLint and unit testing with Jest
+- 🏗️ NestJS build validation
+- 🐳 Docker build pipeline support (optional)
+- 🚀 Easily extendable to deploy to Azure, DigitalOcean, or other cloud providers
+
+You can find the workflow definition in `.github/workflows/ci.yml`.
+
+
+---
 
 ## 📬 Contact
 
