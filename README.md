@@ -1,6 +1,8 @@
 # 📡 Real-Time Chat Backend (NestJS)
 
-![CI](https://github.com/omaromarsalhi/SahraTalk_backend/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/omaromarsalhi/SahraTalk_backend/actions/workflows/docker-build-push.yml/badge.svg)
+&nbsp;&nbsp;&nbsp;
+![CD](https://github.com/omaromarsalhi/SahraTalk_backend/actions/workflows/vm-deploy.yml/badge.svg)
 
 This backend system, powered by **NestJS**, is the core engine of a **real-time chat application**. It supports **secure authentication**, **live communication**, and **file handling**, all while being designed for **scalability**, **performance**, and **security** in production environments.
 
