@@ -103,7 +103,6 @@ The system is optimized to support **hundreds of concurrent users** with **sub-s
 This project uses **GitHub Actions** to automate testing, linting, and building on every push and pull request. CI/CD ensures changes are automatically validated and production-ready.
 
 ### 📦 Workflow Highlights
-- ✅ ESLint and unit testing with Jest
 - 🏗️ NestJS build validation
 - 🐳 Docker build pipeline support (optional)
 - 🚀 Easily extendable to deploy to Azure, DigitalOcean, or other cloud providers
